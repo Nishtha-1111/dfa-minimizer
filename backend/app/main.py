@@ -32,6 +32,16 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def root():
+    return {
+        "service": "DFA Minimizer API",
+        "status": "online",
+        "documentation": "/docs",
+        "health": "/api/health"
+    }
+
+
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "DFA Minimizer API"}
