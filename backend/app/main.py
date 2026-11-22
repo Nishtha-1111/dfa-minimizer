@@ -1,5 +1,7 @@
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from .models import (
     ValidationRequest,
     ValidationResponse,
@@ -70,3 +72,10 @@ def minimize_endpoint(req: MinimizeRequest):
 @app.post("/api/simulate", response_model=SimulateResponse)
 def simulate_endpoint(req: SimulateRequest):
     return run_simulation(req.original_dfa, req.minimal_dfa, req.input_string)
+
+
+# Mount the compiled React frontend static files
+frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+if frontend_dist.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="static")
+

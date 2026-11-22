@@ -1,6 +1,9 @@
 import { DFADefinition, AlgorithmType, MinimizeResponse, ValidationResponse, SimulateResponse } from '../types/dfa';
 
-const API_BASE = '/api';
+const RAW_API = (import.meta.env.VITE_API_BASE_URL || '/api').trim();
+const API_BASE = RAW_API.endsWith('/api') 
+  ? RAW_API.replace(/\/+$/, '') 
+  : `${RAW_API.replace(/\/+$/, '')}/api`;
 
 export async function validateDfa(dfa: DFADefinition): Promise<ValidationResponse> {
   const res = await fetch(`${API_BASE}/validate`, {
