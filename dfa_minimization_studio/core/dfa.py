@@ -44,6 +44,20 @@ class DFA:
     def get_transition(self, state: str, symbol: str) -> Optional[str]:
         return self.transitions.get((state, symbol))
 
+    def accepts(self, input_str: str) -> bool:
+        """Determines if the DFA accepts the given input string."""
+        curr = self.initial_state
+        if not curr:
+            return False
+        for char in input_str:
+            if char not in self.alphabet:
+                return False
+            dest = self.get_transition(curr, char)
+            if not dest:
+                return False
+            curr = dest
+        return curr in self.final_states
+
     def get_transition_table(self) -> Dict[str, Dict[str, str]]:
         """Returns {state: {symbol: to_state}} for easy tabular inspection."""
         table: Dict[str, Dict[str, str]] = {s: {} for s in sorted(self.states)}

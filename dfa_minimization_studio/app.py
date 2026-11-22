@@ -484,14 +484,30 @@ with tab_visualize:
 # -----------------------------------------------------------------------------
 with tab_test:
     st.markdown("#### Test Strings on Original vs Minimized DFA")
-    test_str = st.text_input("Enter input string:", value="0101")
+    st.markdown("Enter input strings to trace acceptance across both machines.")
+    test_str = st.text_input("Enter input string (leave blank or enter ε for empty string):", value="0101")
 
-    if test_str:
-        orig_acc = dfa.accepts(test_str)
-        min_acc = result["minimal_dfa"].accepts(test_str)
+    clean_str = "" if test_str.strip() in ["", "ε"] else test_str.strip()
+    minimal_dfa = result.get("minimal_dfa") if result else None
+
+    if minimal_dfa is not None:
+        from core.simulator import simulate_both
+        sim = simulate_both(dfa, minimal_dfa, clean_str)
 
         tc1, tc2 = st.columns(2)
         with tc1:
-            st.markdown(f"**Original DFA:** {'Accepted' if orig_acc else 'Rejected'}")
+            badge_orig = "✅ **Accepted**" if sim["original_accepted"] else "❌ **Rejected**"
+            st.markdown(f"**Original DFA:** {badge_orig}")
+            st.markdown(f"Path: `{' → '.join(sim['original_path'])}`")
         with tc2:
-            st.markdown(f"**Minimized DFA:** {'Accepted' if min_acc else 'Rejected'}")
+            badge_min = "✅ **Accepted**" if sim["minimal_accepted"] else "❌ **Rejected**"
+            st.markdown(f"**Minimized DFA:** {badge_min}")
+            st.markdown(f"Path: `{' → '.join(sim['minimal_path'])}`")
+
+        if sim["agreement"]:
+            st.success("✓ Both machines agree! Equivalence preserved.")
+        else:
+            st.error("⚠️ Machines disagreed on this input string.")
+    else:
+        orig_acc = dfa.accepts(clean_str)
+        st.markdown(f"**Original DFA:** {'✅ Accepted' if orig_acc else '❌ Rejected'}")
