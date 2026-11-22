@@ -15,19 +15,22 @@
 
 **DFA Minimization Studio & Simulator** is an interactive educational and research tool designed for students, educators, and engineers studying **Theory of Computation** and **Formal Languages**.
 
-Given an arbitrary Deterministic Finite Automaton (DFA), this platform automates the elimination of dead and unreachable states, executes formal minimization algorithms step-by-step, and provides real-time dual-machine string execution to prove language equivalence.
+Given an arbitrary Deterministic Finite Automaton ($M$), this platform automates the elimination of dead and unreachable states, executes formal minimization algorithms step-by-step, and provides real-time dual-machine string execution to prove language equivalence:
 
-The repository provides two complete interfaces:
-1. **Full-Stack Edition**: A modern **React 18 + Vite + Tailwind CSS** frontend paired with a high-performance **FastAPI** REST backend.
-2. **Streamlit Studio**: A standalone Python web application designed for rapid experimentation and one-click cloud deployment.
+$$
+L(M) = L(M_{\min})
+$$
+
+The application is built as a production-grade full-stack architecture:
+- **Frontend**: Modern **React 18 + Vite + Tailwind CSS** client with interactive draggable SVG state graphs and dynamic lower-triangular matrix tables.
+- **Backend**: High-performance **FastAPI** REST API generating algorithmic step-by-step trace highlights and simulation vectors.
 
 ---
 
 ## 2. Live Demo
 
-- **Frontend (Production Web UI)**: [https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app](https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app/) *(Hosted on Vercel)*
-- **Backend API & Swagger Docs**: [https://dfa-minimizer-6jui.onrender.com/docs](https://dfa-minimizer-6jui.onrender.com/docs) *(Hosted on Render)*
-- **Streamlit Community Cloud**: [Deploy via share.streamlit.io](https://share.streamlit.io)
+- **Frontend (Production Web Application)**: [https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app](https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app/) *(Hosted on Vercel)*
+- **Backend REST API & Swagger Docs**: [https://dfa-minimizer-6jui.onrender.com/docs](https://dfa-minimizer-6jui.onrender.com/docs) *(Hosted on Render)*
 
 ---
 
@@ -43,44 +46,52 @@ The repository provides two complete interfaces:
 ## 4. Key Features
 
 - **Interactive DFA Designer**:
-  - Add, rename, or delete states, alphabet symbols, and transitions.
-  - Configure start and accepting (final) states with instantaneous validation.
-  - Preloaded textbook examples (Equivalent states, Unreachable states, Complex multi-cycle DFAs).
+  - Add, rename, or delete states ($Q$), input alphabet symbols ($\Sigma$), and state transitions ($\delta$).
+  - Configure start state ($q_0$) and accepting states ($F$) with instantaneous validation.
+  - Preloaded textbook presets (Equivalent states, Unreachable states, Complex multi-cycle DFAs).
 
 - **Automated Reachability & Completeness Check**:
-  - Breadth-First Search (BFS) reachability analysis to prune dead or unreachable states.
-  - Automatic trap/dead state detection and completion.
+  - Breadth-First Search (BFS) reachability analysis to prune unreachable states ($q \notin \text{Reachable}(q_0)$).
+  - Automatic trap/dead state detection and completion across all symbols $a \in \Sigma$.
 
 - **Multi-Algorithm Minimization Engine**:
-  - **Myhill-Nerode Table-Filling**: Lower-triangular matrix tracking distinguishable pairs \((p, q)\).
-  - **Moore's Partition Refinement**: Signature-based \(k\)-equivalence state splitting.
+  - **Myhill-Nerode Table-Filling**: Lower-triangular matrix tracking distinguishable pairs $(p, q)$.
+  - **Moore's Partition Refinement**: Signature-based $k$-equivalence state splitting.
   - **Hopcroft's Algorithm**: Optimal worklist-driven partition refinement.
 
 - **Step-by-Step Interactive Playback**:
   - Play, Pause, Step Next, and Step Back through algorithm executions.
-  - Dynamic scrubber bar and adjustable playback speed (\(0.5\times\) to \(2\times\)).
+  - Dynamic scrubber bar and adjustable playback speed ($0.5\times$ to $2\times$).
   - Synchronized mathematical explanations and formal LaTeX set notations at every step.
 
 - **Dual-Machine String Verification & Tape Runner**:
-  - Executes test strings concurrently on both the **Original DFA** and the **Minimized DFA**.
-  - Visualizes traversed state paths (\(q_0 \to q_1 \to \dots\)) on both machines.
+  - Executes test strings concurrently on both the **Original DFA** ($M$) and the **Minimized DFA** ($M_{\min}$).
+  - Visualizes traversed state paths ($q_0 \xrightarrow{a_1} q_1 \xrightarrow{a_2} \dots$) on both machines.
   - Confirms language equivalence: both machines yield identical acceptance verdicts.
-  - Batch test runner to validate collections of strings against edge cases (e.g., empty string \(\varepsilon\)).
+  - Batch test runner to validate collections of strings against edge cases (e.g., empty string $\varepsilon$).
 
 ---
 
 ## 5. DFA Minimization: How It Works
 
 A Deterministic Finite Automaton (DFA) is formally defined as a 5-tuple:
-\[
+
+$$
 M = (Q, \Sigma, \delta, q_0, F)
-\]
+$$
+
 Where:
-- \(Q\): Finite set of states
-- \(\Sigma\): Finite set of input symbols (alphabet)
-- \(\delta: Q \times \Sigma \to Q\): Transition function
-- \(q_0 \in Q\): Initial (start) state
-- \(F \subseteq Q\): Set of final (accepting) states
+- **$Q$**: Finite, non-empty set of states
+- **$\Sigma$**: Finite, non-empty set of input symbols (the alphabet)
+- **$\delta$**: State transition function, $\delta : Q \times \Sigma \to Q$
+- **$q_0$**: Initial (start) state, $q_0 \in Q$
+- **$F$**: Set of final (accepting) states, $F \subseteq Q$
+
+The extended transition function $\hat{\delta} : Q \times \Sigma^* \to Q$ processes strings $w \in \Sigma^*$, and the language accepted by $M$ is defined as:
+
+$$
+L(M) = \{ w \in \Sigma^* \mid \hat{\delta}(q_0, w) \in F \}
+$$
 
 ### Minimization Pipeline
 
@@ -97,25 +108,36 @@ Where:
                                                         └───────────────────────┘
 ```
 
-1. **Unreachable State Removal**: Perform BFS traversal starting from \(q_0\). Any state \(q \notin \text{Reachable}(q_0)\) is eliminated:
-   \[
+1. **Unreachable State Removal (BFS)**:
+   Traverse transitions starting from $q_0$. Any state not reachable via any string $w \in \Sigma^*$ is removed:
+   $$
    Q' = \{ q \in Q \mid \exists w \in \Sigma^*, \; \hat{\delta}(q_0, w) = q \}
-   \]
-2. **Initial Partitioning (0-Equivalence)**: Separate states into accepting and non-accepting sets:
-   \[
+   $$
+
+2. **Initial Partitioning ($0$-Equivalence)**:
+   Partition reachable states into accepting and non-accepting subsets:
+   $$
    P_0 = \{ F, \; Q' \setminus F \}
-   \]
-3. **Iterative Refinement**:
-   Two states \(p, q\) belong to the same block in \(P_{k+1}\) if and only if:
-   \[
+   $$
+
+3. **Iterative Partition Refinement**:
+   Two states $p, q$ belong to the same block in partition $P_{k+1}$ if and only if:
+   $$
    p, q \in B_i \in P_k \quad \text{and} \quad \forall a \in \Sigma, \; \delta(p, a) \text{ and } \delta(q, a) \text{ belong to the same block in } P_k
-   \]
-4. **State Merging**: Collapse each final equivalence block \([q]\) into a single composite state.
-5. **Language Invariance Verification**:
-   The minimized DFA \(M_{\min}\) is guaranteed to accept the exact same regular language:
-   \[
-   L(M) = L(M_{\min})
-   \]
+   $$
+
+4. **Distinguishability (Myhill-Nerode Theorem)**:
+   Two states $p$ and $q$ are distinguishable ($p \not\equiv q$) if there exists an input string $w \in \Sigma^*$ such that:
+   $$
+   \hat{\delta}(p, w) \in F \iff \hat{\delta}(q, w) \notin F
+   $$
+   States that are not distinguishable are equivalent ($p \equiv q$) and collapse into a single merged state.
+
+5. **Minimized Automaton Construction & Language Invariance**:
+   The resulting minimal automaton $M_{\min} = (Q_{\min}, \Sigma, \delta_{\min}, [q_0], F_{\min})$ satisfies the Myhill-Nerode theorem:
+   $$
+   |Q_{\min}| \le |Q| \quad \text{and} \quad L(M) = L(M_{\min})
+   $$
 
 ---
 
@@ -123,9 +145,9 @@ Where:
 
 | Algorithm | Worst-Case Time Complexity | Space Complexity | Description & Mechanism | Supported Editions |
 |---|:---:|:---:|---|:---:|
-| **Hopcroft's Algorithm** | \(O(\|\Sigma\| \cdot \|Q\| \log \|Q\|)\) | \(O(\|\Sigma\| \cdot \|Q\|)\) | Uses a worklist of potential splitter sets; splits blocks only against the smaller sub-partition. | Backend / Streamlit |
-| **Moore's Algorithm** | \(O(\|\Sigma\| \cdot \|Q\|^2)\) | \(O(\|Q\|)\) | Successively computes \(k\)-equivalence classes by encoding transition destination signatures. | Full-Stack & Streamlit |
-| **Myhill-Nerode Table-Filling** | \(O(\|\Sigma\| \cdot \|Q\|^2)\) | \(O(\|Q\|^2)\) | Constructs a lower-triangular matrix of pairs \((p, q)\) and iteratively marks distinguishable pairs. | Full-Stack (React + FastAPI) |
+| **Hopcroft's Algorithm** | $O(|\Sigma| \cdot |Q| \log |Q|)$ | $O(|\Sigma| \cdot |Q|)$ | Worklist-driven refinement; splits partitions against the smaller sub-block. | Backend REST API |
+| **Moore's Algorithm** | $O(|\Sigma| \cdot |Q|^2)$ | $O(|Q|)$ | Successively refines $k$-equivalence classes via transition destination signatures. | Full-Stack (React + FastAPI) |
+| **Myhill-Nerode Table-Filling** | $O(|\Sigma| \cdot |Q|^2)$ | $O(|Q|^2)$ | Lower-triangular matrix iteratively marking distinguishable pairs $(p, q)$. | Full-Stack (React + FastAPI) |
 
 ---
 
@@ -190,17 +212,9 @@ dfa-minimizer/
 │   │   └── test_api.py           # API endpoint integration tests
 │   └── requirements.txt          # Backend-specific dependencies
 │
-├── dfa_minimization_studio/      # Standalone Streamlit Application
-│   ├── app.py                    # Streamlit entrypoint
-│   ├── core/                     # Automata engine (dfa.py, validator, simulator, samples)
-│   ├── algorithms/               # Hopcroft & Moore implementations
-│   ├── visualization/            # Graphviz DOT state diagram generators
-│   └── ui/                       # Streamlit tab views (Designer, Minimizer, Testing)
-│
 ├── assets/screenshots/           # Screenshots and demo media for repository
 │   └── demo.png                  # Showcase preview of the React application
 ├── requirements.txt              # Unified Python requirements
-├── packages.txt                # System packages for container environments (graphviz)
 └── run_all.py                    # Concurrent local development runner
 ```
 
@@ -215,7 +229,7 @@ dfa-minimizer/
 
 ---
 
-### Option A: Run Full-Stack Web Application (Recommended)
+### Step-by-Step Setup
 
 1. **Clone the repository**:
    ```bash
@@ -250,26 +264,11 @@ dfa-minimizer/
 
 ---
 
-### Option B: Run Standalone Streamlit Studio
-
-1. **Install Python dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Launch Streamlit**:
-   ```bash
-   streamlit run dfa_minimization_studio/app.py
-   ```
-   Open **http://localhost:8501** in your browser.
-
----
-
 ## 10. How to Use the Application
 
-1. **Step 1: Input the DFA**:
-   - Choose a textbook preset from the top bar (e.g., *Equivalent States*, *Unreachable States*) or enter states, alphabet, and transitions manually.
-   - Designate the initial state and accepting states.
+1. **Step 1: Input the DFA ($M$)**:
+   - Choose a textbook preset from the top bar (e.g., *Equivalent States*, *Unreachable States*) or enter states ($Q$), alphabet symbols ($\Sigma$), and transitions ($\delta$) manually.
+   - Designate the initial state ($q_0$) and accepting states ($F$).
 2. **Step 2: Choose Minimization Algorithm**:
    - Select **Table-Filling** (Myhill-Nerode) or **Moore's Algorithm** from the segmented toggle.
    - Click the **Minimize** button.
@@ -279,7 +278,7 @@ dfa-minimizer/
    - Use the sticky playback bar to pause, step forward, or adjust animation speed.
 4. **Step 4: Test String Equivalence**:
    - Switch to the **Test Strings** tab.
-   - Enter any test string (e.g. `0101`, or leave blank for empty string \(\varepsilon\)).
+   - Enter any test string (e.g. `0101`, or leave blank for the empty string $\varepsilon$).
    - Observe the concurrent step-by-step state traversal paths and verify that both machines reach identical acceptance verdicts.
 
 ---
@@ -318,11 +317,6 @@ The FastAPI backend exposes RESTful endpoints for integration with external tool
    - **Instance Type**: `Free`
 3. Click **Create Web Service**.
 
-### Deploy on Streamlit Community Cloud
-1. Connect repository on [share.streamlit.io](https://share.streamlit.io).
-2. Set **Main file path** to: `dfa_minimization_studio/app.py`.
-3. Click **Deploy!**
-
 ---
 
 ## 13. Testing
@@ -330,16 +324,13 @@ The FastAPI backend exposes RESTful endpoints for integration with external tool
 Run automated pytest suites to verify algorithmic correctness, partition invariance, and API endpoints:
 
 ```bash
-# 1. Run Backend API Tests
+# Run Backend API Tests
 python -m pytest backend/tests -v
-
-# 2. Run Minimization Studio Tests
-python -m pytest dfa_minimization_studio/tests -v
 ```
 
 All test cases verify:
 - Reachability BFS pruning of unreachable states.
-- Exact equivalence between original and minimized state machines.
+- Exact equivalence between original and minimized state machines ($L(M) = L(M_{\min})$).
 - Correctness of partition refinement steps on textbook automata.
 - Edge cases: single-state machines, all-accepting, zero-accepting, and disconnected states.
 
