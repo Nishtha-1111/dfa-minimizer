@@ -1,17 +1,17 @@
-# 🚀 DFA Minimization Studio & Simulator
+# DFA Minimization Studio & Simulator
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109%2B-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[![Vercel](https://img.shields.io/badge/Frontend-Vercel-black.svg?logo=vercel&logoColor=white)](https://vercel.com)
-[![Render](https://img.shields.io/badge/Backend-Render-46E3B7.svg?logo=render&logoColor=black)](https://render.com)
+[![Vercel](https://img.shields.io/badge/Frontend-Vercel-black.svg?logo=vercel&logoColor=white)](https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app/)
+[![Render](https://img.shields.io/badge/Backend-Render-46E3B7.svg?logo=render&logoColor=black)](https://dfa-minimizer-6jui.onrender.com/docs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 📖 1. Project Overview
+## 1. Project Overview
 
 **DFA Minimization Studio & Simulator** is an interactive educational and research tool designed for students, educators, and engineers studying **Theory of Computation** and **Formal Languages**.
 
@@ -23,7 +23,7 @@ The repository provides two complete interfaces:
 
 ---
 
-## 🌐 2. Live Demo
+## 2. Live Demo
 
 - **Frontend (Production Web UI)**: [https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app](https://dfa-minimizer-whzn-k4864nvjn-nishtha-1111s-projects.vercel.app/) *(Hosted on Vercel)*
 - **Backend API & Swagger Docs**: [https://dfa-minimizer-6jui.onrender.com/docs](https://dfa-minimizer-6jui.onrender.com/docs) *(Hosted on Render)*
@@ -31,7 +31,7 @@ The repository provides two complete interfaces:
 
 ---
 
-## 📸 3. Application Screenshots
+## 3. Application Screenshots
 
 | Interactive DFA Minimizer (React + Tailwind + Vite) |
 |:---:|
@@ -40,28 +40,28 @@ The repository provides two complete interfaces:
 
 ---
 
-## ✨ 4. Key Features
+## 4. Key Features
 
-- **🎨 Interactive DFA Designer**:
+- **Interactive DFA Designer**:
   - Add, rename, or delete states, alphabet symbols, and transitions.
   - Configure start and accepting (final) states with instantaneous validation.
   - Preloaded textbook examples (Equivalent states, Unreachable states, Complex multi-cycle DFAs).
 
-- **🔍 Automated Reachability & Completeness Check**:
+- **Automated Reachability & Completeness Check**:
   - Breadth-First Search (BFS) reachability analysis to prune dead or unreachable states.
   - Automatic trap/dead state detection and completion.
 
-- **🧠 Multi-Algorithm Minimization Engine**:
+- **Multi-Algorithm Minimization Engine**:
   - **Myhill-Nerode Table-Filling**: Lower-triangular matrix tracking distinguishable pairs \((p, q)\).
   - **Moore's Partition Refinement**: Signature-based \(k\)-equivalence state splitting.
   - **Hopcroft's Algorithm**: Optimal worklist-driven partition refinement.
 
-- **🎬 Step-by-Step Interactive Playback**:
+- **Step-by-Step Interactive Playback**:
   - Play, Pause, Step Next, and Step Back through algorithm executions.
   - Dynamic scrubber bar and adjustable playback speed (\(0.5\times\) to \(2\times\)).
   - Synchronized mathematical explanations and formal LaTeX set notations at every step.
 
-- **🧪 Dual-Machine String Verification & Tape Runner**:
+- **Dual-Machine String Verification & Tape Runner**:
   - Executes test strings concurrently on both the **Original DFA** and the **Minimized DFA**.
   - Visualizes traversed state paths (\(q_0 \to q_1 \to \dots\)) on both machines.
   - Confirms language equivalence: both machines yield identical acceptance verdicts.
@@ -69,7 +69,7 @@ The repository provides two complete interfaces:
 
 ---
 
-## 📐 5. DFA Minimization: How It Works
+## 5. DFA Minimization: How It Works
 
 A Deterministic Finite Automaton (DFA) is formally defined as a 5-tuple:
 \[
@@ -119,7 +119,7 @@ Where:
 
 ---
 
-## 📊 6. Supported Algorithms & Complexity Comparison
+## 6. Supported Algorithms & Complexity Comparison
 
 | Algorithm | Worst-Case Time Complexity | Space Complexity | Description & Mechanism | Supported Editions |
 |---|:---:|:---:|---|:---:|
@@ -129,7 +129,7 @@ Where:
 
 ---
 
-## 🏛 7. Application Architecture
+## 7. Application Architecture
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -156,7 +156,7 @@ Where:
 
 ---
 
-## 📁 8. Project Directory Structure
+## 8. Project Directory Structure
 
 ```
 dfa-minimizer/
@@ -206,7 +206,7 @@ dfa-minimizer/
 
 ---
 
-## ⚡ 9. Installation & Local Setup
+## 9. Installation & Local Setup
 
 ### Prerequisites
 - **Python**: 3.10 or higher
@@ -265,7 +265,7 @@ dfa-minimizer/
 
 ---
 
-## 🖥 10. How to Use the Application
+## 10. How to Use the Application
 
 1. **Step 1: Input the DFA**:
    - Choose a textbook preset from the top bar (e.g., *Equivalent States*, *Unreachable States*) or enter states, alphabet, and transitions manually.
@@ -284,7 +284,7 @@ dfa-minimizer/
 
 ---
 
-## 📡 11. API Documentation
+## 11. API Documentation
 
 The FastAPI backend exposes RESTful endpoints for integration with external tools:
 
@@ -299,14 +299,14 @@ The FastAPI backend exposes RESTful endpoints for integration with external tool
 
 ---
 
-## ☁️ 12. Deployment Instructions
+## 12. Deployment Instructions
 
 ### Deploy Frontend on Vercel
 1. Go to [vercel.com](https://vercel.com) and import the repository.
 2. Set **Root Directory** to `frontend`.
 3. Add the Environment Variable:
    - **Key**: `VITE_API_BASE_URL`
-   - **Value**: `https://<your-render-backend-url>` (e.g., `https://dfa-minimizer-6jui.onrender.com`)
+   - **Value**: `https://dfa-minimizer-6jui.onrender.com`
 4. Click **Deploy**.
 
 ### Deploy Backend on Render
@@ -325,7 +325,7 @@ The FastAPI backend exposes RESTful endpoints for integration with external tool
 
 ---
 
-## 🧪 13. Testing
+## 13. Testing
 
 Run automated pytest suites to verify algorithmic correctness, partition invariance, and API endpoints:
 
@@ -345,7 +345,7 @@ All test cases verify:
 
 ---
 
-## 🔮 14. Future Enhancements
+## 14. Future Enhancements
 
 - [ ] **NFA to DFA Conversion (Subset Construction)**: Convert Non-deterministic Finite Automata to equivalent DFAs before minimization.
 - [ ] **Regular Expression to DFA**: Compile regex patterns directly into minimal DFAs using Thompson's construction and Glushkov's algorithm.
@@ -354,13 +354,13 @@ All test cases verify:
 
 ---
 
-## 📄 15. License
+## 15. License
 
 This project is open-source and distributed under the **MIT License**. See the `LICENSE` file for details.
 
 ---
 
-## 🤝 16. Acknowledgements & References
+## 16. Acknowledgements & References
 
 - **John E. Hopcroft, Rajeev Motwani, Jeffrey D. Ullman**: *Introduction to Automata Theory, Languages, and Computation* (3rd Edition).
 - **Michael Sipser**: *Introduction to the Theory of Computation* (3rd Edition).
