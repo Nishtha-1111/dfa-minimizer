@@ -76,22 +76,18 @@ The application is built as a production-grade full-stack architecture:
 
 A Deterministic Finite Automaton (DFA) is formally defined as a 5-tuple:
 
-$$
-M = (Q, \Sigma, \delta, q_0, F)
-$$
+$$M = (Q, \Sigma, \delta, q_0, F)$$
 
 Where:
-- **$Q$**: Finite, non-empty set of states
-- **$\Sigma$**: Finite, non-empty set of input symbols (the alphabet)
-- **$\delta$**: State transition function, $\delta : Q \times \Sigma \to Q$
-- **$q_0$**: Initial (start) state, $q_0 \in Q$
-- **$F$**: Set of final (accepting) states, $F \subseteq Q$
+- **Q**: Finite, non-empty set of states (e.g., `{A, B, C, D, E, F}`)
+- **Σ (Sigma)**: Finite set of input symbols / alphabet (e.g., `{0, 1}`)
+- **δ (Delta)**: State transition function, `δ : Q × Σ → Q`
+- **q₀**: Initial (start) state, `q₀ ∈ Q`
+- **F**: Set of final (accepting) states, `F ⊆ Q`
 
-The extended transition function $\hat{\delta} : Q \times \Sigma^* \to Q$ processes strings $w \in \Sigma^*$, and the language accepted by $M$ is defined as:
+The extended transition function `δ̂ : Q × Σ* → Q` processes strings `w ∈ Σ*`, and the language recognized by `M` is:
 
-$$
-L(M) = \{ w \in \Sigma^* \mid \hat{\delta}(q_0, w) \in F \}
-$$
+$$L(M) = \{ w \in \Sigma^* \mid \hat{\delta}(q_0, w) \in F \}$$
 
 ### Minimization Pipeline
 
@@ -108,46 +104,35 @@ $$
                                                         └───────────────────────┘
 ```
 
-1. **Unreachable State Removal (BFS)**:
-   Traverse transitions starting from $q_0$. Any state not reachable via any string $w \in \Sigma^*$ is removed:
-   $$
-   Q' = \{ q \in Q \mid \exists w \in \Sigma^*, \; \hat{\delta}(q_0, w) = q \}
-   $$
+**Step 1: Unreachable State Removal (BFS)**  
+Traverse all transitions starting from the start state `q₀`. Any state that cannot be reached via any input string `w ∈ Σ*` is pruned:  
+`Q' = { q ∈ Q | ∃ w ∈ Σ*, δ̂(q₀, w) = q }`
 
-2. **Initial Partitioning ($0$-Equivalence)**:
-   Partition reachable states into accepting and non-accepting subsets:
-   $$
-   P_0 = \{ F, \; Q' \setminus F \}
-   $$
+**Step 2: Initial Partitioning (0-Equivalence)**  
+Partition reachable states into accepting and non-accepting subsets:  
+`P₀ = { F, Q' \ F }`
 
-3. **Iterative Partition Refinement**:
-   Two states $p, q$ belong to the same block in partition $P_{k+1}$ if and only if:
-   $$
-   p, q \in B_i \in P_k \quad \text{and} \quad \forall a \in \Sigma, \; \delta(p, a) \text{ and } \delta(q, a) \text{ belong to the same block in } P_k
-   $$
+**Step 3: Iterative Partition Refinement**  
+Two states `p, q` remain in the same block in `Pₖ₊₁` if and only if for all input symbols `a ∈ Σ`, their transitions lead to states already in the same block:  
+`p, q ∈ Bᵢ ∈ Pₖ  and  ∀ a ∈ Σ, δ(p, a) and δ(q, a) belong to the same block in Pₖ`
 
-4. **Distinguishability (Myhill-Nerode Theorem)**:
-   Two states $p$ and $q$ are distinguishable ($p \not\equiv q$) if there exists an input string $w \in \Sigma^*$ such that:
-   $$
-   \hat{\delta}(p, w) \in F \iff \hat{\delta}(q, w) \notin F
-   $$
-   States that are not distinguishable are equivalent ($p \equiv q$) and collapse into a single merged state.
+**Step 4: Distinguishability (Myhill-Nerode Theorem)**  
+Two states `p` and `q` are distinguishable (`p ≢ q`) if there exists an input string `w ∈ Σ*` such that exactly one of `δ̂(p, w)` or `δ̂(q, w)` is in `F`. States that cannot be distinguished are equivalent (`p ≡ q`) and merge together.
 
-5. **Minimized Automaton Construction & Language Invariance**:
-   The resulting minimal automaton $M_{\min} = (Q_{\min}, \Sigma, \delta_{\min}, [q_0], F_{\min})$ satisfies the Myhill-Nerode theorem:
-   $$
-   |Q_{\min}| \le |Q| \quad \text{and} \quad L(M) = L(M_{\min})
-   $$
+**Step 5: Minimized Automaton Construction & Language Invariance**  
+Each group of equivalent states is collapsed into a single composite state. The minimized automaton `M_min` is guaranteed to recognize the identical regular language:  
+
+$$L(M) = L(M_{\min})$$
 
 ---
 
 ## 6. Supported Algorithms & Complexity Comparison
 
-| Algorithm | Worst-Case Time Complexity | Space Complexity | Description & Mechanism | Supported Editions |
+| Algorithm | Time Complexity | Space Complexity | Description & Mechanism | Supported Editions |
 |---|:---:|:---:|---|:---:|
-| **Hopcroft's Algorithm** | $O(|\Sigma| \cdot |Q| \log |Q|)$ | $O(|\Sigma| \cdot |Q|)$ | Worklist-driven refinement; splits partitions against the smaller sub-block. | Backend REST API |
-| **Moore's Algorithm** | $O(|\Sigma| \cdot |Q|^2)$ | $O(|Q|)$ | Successively refines $k$-equivalence classes via transition destination signatures. | Full-Stack (React + FastAPI) |
-| **Myhill-Nerode Table-Filling** | $O(|\Sigma| \cdot |Q|^2)$ | $O(|Q|^2)$ | Lower-triangular matrix iteratively marking distinguishable pairs $(p, q)$. | Full-Stack (React + FastAPI) |
+| **Hopcroft's Algorithm** | `O(\|Σ\| · \|Q\| log \|Q\|)` | `O(\|Σ\| · \|Q\|)` | Worklist-driven refinement; splits partitions against the smaller sub-block. | Backend REST API |
+| **Moore's Algorithm** | `O(\|Σ\| · \|Q\|²)` | `O(\|Q\|)` | Successively refines k-equivalence classes via transition destination signatures. | Full-Stack (React + FastAPI) |
+| **Myhill-Nerode Table-Filling** | `O(\|Σ\| · \|Q\|²)` | `O(\|Q\|²)` | Lower-triangular matrix iteratively marking distinguishable pairs (p, q). | Full-Stack (React + FastAPI) |
 
 ---
 
